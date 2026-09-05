@@ -81,13 +81,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           {/* Brand & About */}
           <div className="col-span-2 md:col-span-4 lg:col-span-2">
             <div className="flex items-center gap-3 mb-4 cursor-pointer" onClick={() => onNavigate('home')}>
-              <img src="/logo.svg" alt="X Sarkari Job" className="w-9 h-9" />
-              <span className="text-lg font-black tracking-tight text-white">
-                <span className="text-amber-500">X</span> SARKARI JOB
-              </span>
+              <img src="/logo.svg" alt="X Sarkari Job" className="w-10 h-10 rounded-full" />
+              <div>
+                <span className="text-lg font-black tracking-tight text-white uppercase">
+                  <span className="text-amber-500">X</span> SARKARI JOB
+                </span>
+                <span className="ml-2 text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded">
+                  Govt Alerts
+                </span>
+              </div>
             </div>
             <p className="text-xs text-gray-400 leading-relaxed mb-4 pr-6">
-              X Sarkari Job is an independent government examination and career information portal dedicated to providing authenticated recruitment notices, admit cards, answer keys, exam results, and detailed syllabi for Indian government job aspirants.
+              X Sarkari Job (xsarkarijob.com) is an independent government examination and career information portal providing fast, verified updates on Sarkari Naukri, Admit Cards, Answer Keys, Results, and detailed syllabi across India.
             </p>
             <div className="flex items-center gap-3 text-xs text-gray-400">
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -221,7 +226,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         {/* Bottom copyright & sitemap links */}
         <div className="border-t border-gray-800/80 pt-6 mt-4 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">
-          <p>© 2026 X Sarkari Job. All Rights Reserved.</p>
+          <p>© 2026 X Sarkari Job. All Rights Reserved. • www.xsarkarijob.com</p>
           <div className="flex items-center gap-4 text-gray-400">
             <a href="/sitemap.xml" target="_blank" rel="noreferrer" className="hover:text-white flex items-center gap-1">
               XML Sitemap <ExternalLink className="w-3 h-3" />

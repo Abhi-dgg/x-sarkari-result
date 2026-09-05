@@ -1,5 +1,5 @@
 import React from 'react';
-import { Briefcase, Award, CreditCard, KeyRound, ChevronRight } from 'lucide-react';
+import { ChevronRight, Sparkles, Flame } from 'lucide-react';
 
 interface QuickActionCardsProps {
   onNavigate: (route: string) => void;
@@ -11,86 +11,88 @@ interface QuickActionCardsProps {
   };
 }
 
-export const QuickActionCards: React.FC<QuickActionCardsProps> = ({ onNavigate, counts }) => {
-  const cards = [
+export const QuickActionCards: React.FC<QuickActionCardsProps> = ({ onNavigate }) => {
+  // Iconic Result Bharat Trending Hot Boxed Links
+  const trendingBoxes = [
     {
-      title: 'Latest Jobs',
-      subtitle: 'Online Application Forms',
-      route: 'jobs',
-      count: counts?.jobs ?? 12,
-      bgColor: 'bg-emerald-50 hover:bg-emerald-100/70 border-emerald-200 text-emerald-950',
-      badgeColor: 'bg-emerald-600 text-white',
-      icon: Briefcase,
-      accentColor: 'text-emerald-700'
+      title: 'SSC CGL 2026 Apply Online',
+      route: 'job:ssc-cgl-2026',
+      bgColor: 'bg-[#d32f2f] hover:bg-[#b71c1c]',
+      tag: '17,727 Posts'
     },
     {
-      title: 'Results',
-      subtitle: 'Scorecards & Merit Lists',
-      route: 'results',
-      count: counts?.results ?? 6,
-      bgColor: 'bg-blue-50 hover:bg-blue-100/70 border-blue-200 text-blue-950',
-      badgeColor: 'bg-blue-600 text-white',
-      icon: Award,
-      accentColor: 'text-blue-700'
+      title: 'Railway RRB NTPC 2026 Form',
+      route: 'job:rrb-ntpc-2026',
+      bgColor: 'bg-[#1976d2] hover:bg-[#1565c0]',
+      tag: '11,558 Posts'
     },
     {
-      title: 'Admit Card',
-      subtitle: 'Hall Tickets & City Slips',
-      route: 'admit-card',
-      count: counts?.admitCards ?? 5,
-      bgColor: 'bg-amber-50 hover:bg-amber-100/70 border-amber-200 text-amber-950',
-      badgeColor: 'bg-amber-600 text-white',
-      icon: CreditCard,
-      accentColor: 'text-amber-700'
+      title: 'UPSC Civil Services 2026 Result',
+      route: 'result:upsc-cse-prelims-2026',
+      bgColor: 'bg-[#2e7d32] hover:bg-[#1b5e20]',
+      tag: 'Marks Out'
     },
     {
-      title: 'Answer Key',
-      subtitle: 'Objections & Response Sheets',
-      route: 'answer-key',
-      count: counts?.answerKeys ?? 4,
-      bgColor: 'bg-purple-50 hover:bg-purple-100/70 border-purple-200 text-purple-950',
-      badgeColor: 'bg-purple-600 text-white',
-      icon: KeyRound,
-      accentColor: 'text-purple-700'
-    }
+      title: 'Bihar Police Constable Admit Card',
+      route: 'admit-card:csbc-bihar-police-constable-2026',
+      bgColor: 'bg-[#e65100] hover:bg-[#bf360c]',
+      tag: 'Download Link'
+    },
+    {
+      title: 'UP Police Constable Exam 2026',
+      route: 'job:ssc-cgl-2026',
+      bgColor: 'bg-[#7b1fa2] hover:bg-[#6a1b9a]',
+      tag: 'City Slip'
+    },
+    {
+      title: 'IBPS PO Recruitment 2026',
+      route: 'job:ibps-po-xiv-2026',
+      bgColor: 'bg-[#00838f] hover:bg-[#006064]',
+      tag: '3,955 Posts'
+    },
+    {
+      title: 'Indian Army Agniveer Rally 2026',
+      route: 'job:ssc-cgl-2026',
+      bgColor: 'bg-[#880e4f] hover:bg-[#4a148c]',
+      tag: 'Rally Online'
+    },
+    {
+      title: 'Airforce Agniveer Vayu Intake',
+      route: 'job:ssc-cgl-2026',
+      bgColor: 'bg-[#0d47a1] hover:bg-[#1a237e]',
+      tag: '01/2026 Batch'
+    },
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-5 relative z-20">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        {cards.map((card) => {
-          const Icon = card.icon;
-          return (
-            <div
-              key={card.title}
-              onClick={() => onNavigate(card.route)}
-              className={`${card.bgColor} border rounded-xl p-4 sm:p-5 transition-all duration-150 cursor-pointer shadow-sm hover:shadow-md flex flex-col justify-between group`}
-            >
-              <div className="flex items-start justify-between">
-                <div className="p-2 rounded-lg bg-white shadow-2xs border border-gray-100">
-                  <Icon className={`w-5 h-5 ${card.accentColor}`} />
-                </div>
-                <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${card.badgeColor}`}>
-                  {card.count}+ Updates
-                </span>
-              </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
+      {/* Top Banner Indicator */}
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-1.5 text-xs font-black text-[#800000] uppercase tracking-wider">
+          <Flame className="w-4 h-4 fill-current text-red-600 animate-bounce" />
+          <span>Trending Online Forms & Fast Links</span>
+        </div>
+        <span className="text-[11px] text-gray-500 hidden sm:inline font-semibold">
+          Click any box below for direct application or admit card portal
+        </span>
+      </div>
 
-              <div className="mt-4">
-                <h3 className="text-base sm:text-lg font-bold tracking-tight text-gray-900 group-hover:text-amber-700 transition-colors">
-                  {card.title}
-                </h3>
-                <p className="text-xs text-gray-600 mt-0.5">
-                  {card.subtitle}
-                </p>
-              </div>
-
-              <div className="mt-3 pt-3 border-t border-gray-200/60 flex items-center justify-between text-xs font-bold text-gray-700">
-                <span>Browse all</span>
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-          );
-        })}
+      {/* The Famous Result Bharat 8-Box Colorful Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+        {trendingBoxes.map((box, idx) => (
+          <div
+            key={idx}
+            onClick={() => onNavigate(box.route)}
+            className={`${box.bgColor} text-white rounded-md p-3 sm:p-3.5 shadow-sm hover:shadow-md cursor-pointer transition-all duration-150 transform hover:-translate-y-0.5 text-center flex flex-col justify-center items-center select-none border border-black/10 group`}
+          >
+            <h3 className="text-xs sm:text-sm font-extrabold tracking-tight leading-snug group-hover:underline">
+              {box.title}
+            </h3>
+            <span className="mt-1.5 text-[10px] sm:text-[11px] font-bold bg-black/25 text-[#ffeb3b] px-2 py-0.5 rounded">
+              {box.tag}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );

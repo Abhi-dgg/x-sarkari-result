@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { Search, Menu, X, ShieldAlert, Sparkles, User, ExternalLink, Calendar, Calculator, BookOpen, CheckCircle, FileText } from 'lucide-react';
+import { 
+  Search, 
+  Menu, 
+  X, 
+  User, 
+  Calendar, 
+  Calculator, 
+  MessageCircle, 
+  Send, 
+  Youtube, 
+  Smartphone,
+  ShieldCheck
+} from 'lucide-react';
 
 interface HeaderProps {
   currentRoute: string;
@@ -18,13 +30,13 @@ export const Header: React.FC<HeaderProps> = ({
   const [toolsDropdownOpen, setToolsDropdownOpen] = useState(false);
 
   const navItems = [
-    { label: 'Home', route: 'home' },
-    { label: 'Latest Jobs', route: 'jobs' },
-    { label: 'Results', route: 'results' },
-    { label: 'Admit Card', route: 'admit-card' },
-    { label: 'Answer Key', route: 'answer-key' },
-    { label: 'Syllabus', route: 'syllabus' },
-    { label: 'Admission', route: 'admission' },
+    { label: 'HOME', route: 'home' },
+    { label: 'RESULT', route: 'results' },
+    { label: 'ADMIT CARD', route: 'admit-card' },
+    { label: 'LATEST JOBS', route: 'jobs' },
+    { label: 'ANSWER KEY', route: 'answer-key' },
+    { label: 'SYLLABUS', route: 'syllabus' },
+    { label: 'ADMISSION', route: 'admission' },
   ];
 
   const handleNav = (route: string) => {
@@ -34,32 +46,32 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-xs">
+    <header className="bg-white border-b border-gray-200">
       {/* Top micro-bar: Verified notice & Fast Alert */}
-      <div className="bg-gray-900 text-gray-200 text-xs px-4 py-1.5 font-medium flex items-center justify-between">
+      <div className="bg-[#1f2937] text-gray-200 text-xs px-4 py-1.5 font-medium flex items-center justify-between border-b border-gray-800">
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-gray-950 uppercase tracking-wider">
-            Verified Portal
+          <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-bold bg-[#dc2626] text-white uppercase tracking-wider">
+            Official
           </span>
-          <span className="hidden sm:inline text-gray-300">
-            India's Trusted Government Jobs, Results & Exam Information Network
+          <span className="hidden sm:inline text-gray-300 text-[11px]">
+            Welcome to <strong className="text-white">X Sarkari Job</strong> — India's Fast & Verified Govt Jobs, Results & Admit Card Portal
           </span>
         </div>
-        <div className="flex items-center gap-4 text-[11px]">
+        <div className="flex items-center gap-3 text-[11px]">
           <button 
             onClick={() => handleNav('disclaimer')} 
-            className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+            className="text-gray-300 hover:text-white transition-colors cursor-pointer"
           >
             Disclaimer
           </button>
-          <span className="text-gray-700">|</span>
+          <span className="text-gray-600">|</span>
           <button 
             onClick={() => handleNav('contact')} 
-            className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+            className="text-gray-300 hover:text-white transition-colors cursor-pointer"
           >
             Help & Contact
           </button>
-          <span className="text-gray-700">|</span>
+          <span className="text-gray-600">|</span>
           <button 
             onClick={() => handleNav('admin')} 
             className="inline-flex items-center gap-1 text-amber-400 hover:text-amber-300 font-semibold cursor-pointer"
@@ -70,35 +82,86 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Main Brand & Navigation Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-18">
+      {/* X Sarkari Job Iconic Header Banner */}
+      <div className="bg-white py-3.5 px-4 sm:px-6 border-b border-gray-200 shadow-2xs">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           
-          {/* Brand Logo & Name */}
+          {/* Centered / Left Logo & Title */}
           <div 
             onClick={() => handleNav('home')} 
-            className="flex items-center gap-3 cursor-pointer select-none group"
+            className="flex items-center gap-3.5 cursor-pointer select-none group text-center md:text-left"
             id="brand-logo-button"
           >
             <img 
               src="/logo.svg" 
-              alt="X Sarkari Job Logo" 
-              className="w-11 h-11 transition-transform group-hover:scale-105"
+              alt="X Sarkari Job Official Emblem" 
+              className="w-14 h-14 rounded-full transition-transform group-hover:scale-105 shadow-sm"
             />
             <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xl font-black tracking-tight text-gray-900">
-                  <span className="text-amber-600">X</span> SARKARI JOB
+              <div className="flex items-center gap-2 justify-center md:justify-start">
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#800000] uppercase font-sans flex items-center">
+                  <span className="text-[#f59e0b] mr-1">X</span> SARKARI JOB
+                </h1>
+                <span className="text-[10px] font-extrabold bg-[#800000] text-[#ffeb3b] px-1.5 py-0.5 rounded tracking-wide uppercase">
+                  Govt Alerts
                 </span>
               </div>
-              <p className="text-[11px] font-medium text-gray-500 leading-tight">
-                Official Exam & Recruitment Information
+              <p className="text-xs font-bold text-gray-800 tracking-wide mt-0.5">
+                www.xsarkarijob.com
+              </p>
+              <p className="text-[11px] text-gray-600 hidden sm:block">
+                Free Job Alert, Sarkari Result, Sarkari Exam, Online Form, Admit Card & Answer Key 2026
               </p>
             </div>
           </div>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 text-sm font-semibold text-gray-700">
+          {/* Social Quick-Join Buttons (Signature Result Bharat Feature) */}
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <a
+              href="https://whatsapp.com"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-bold shadow-xs transition-transform hover:-translate-y-0.5"
+            >
+              <MessageCircle className="w-3.5 h-3.5 fill-current" />
+              <span>Join WhatsApp</span>
+            </a>
+            <a
+              href="https://telegram.org"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#0088cc] hover:bg-[#0077b5] text-white text-xs font-bold shadow-xs transition-transform hover:-translate-y-0.5"
+            >
+              <Send className="w-3.5 h-3.5 fill-current" />
+              <span>Join Telegram</span>
+            </a>
+            <a
+              href="https://youtube.com"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#FF0000] hover:bg-[#e60000] text-white text-xs font-bold shadow-xs transition-transform hover:-translate-y-0.5 hidden sm:inline-flex"
+            >
+              <Youtube className="w-3.5 h-3.5 fill-current" />
+              <span>YouTube</span>
+            </a>
+            <button
+              onClick={() => onOpenSearch()}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#d97706] hover:bg-[#b45309] text-white text-xs font-bold shadow-xs transition-transform hover:-translate-y-0.5 cursor-pointer"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span>Search Job</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Main Maroon Navigation Bar (Signature Result Bharat Menu) */}
+      <div className="bg-[#800000] text-white shadow-md sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          
+          {/* Desktop Nav Links */}
+          <nav className="hidden md:flex items-center space-x-1 font-bold text-xs tracking-wider">
             {navItems.map(item => {
               const active = currentRoute === item.route;
               return (
@@ -106,10 +169,10 @@ export const Header: React.FC<HeaderProps> = ({
                   key={item.route}
                   id={`nav-${item.route}`}
                   onClick={() => handleNav(item.route)}
-                  className={`px-3 py-2 rounded-md transition-colors cursor-pointer ${
+                  className={`py-3 px-3 transition-colors cursor-pointer border-b-2 flex items-center gap-1 ${
                     active 
-                      ? 'text-amber-700 bg-amber-50 font-bold' 
-                      : 'hover:text-gray-950 hover:bg-gray-100'
+                      ? 'bg-[#660000] text-[#ffeb3b] border-[#ffeb3b]' 
+                      : 'border-transparent text-white hover:bg-[#990000] hover:text-[#ffeb3b]'
                   }`}
                 >
                   {item.label}
@@ -122,132 +185,110 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 id="nav-tools-dropdown"
                 onClick={() => setToolsDropdownOpen(!toolsDropdownOpen)}
-                className="px-3 py-2 rounded-md hover:text-gray-950 hover:bg-gray-100 flex items-center gap-1 cursor-pointer"
+                className="py-3 px-3 transition-colors cursor-pointer border-b-2 border-transparent text-white hover:bg-[#990000] hover:text-[#ffeb3b] flex items-center gap-1"
               >
-                Tools
-                <span className="text-xs text-gray-500">▾</span>
+                TOOLS ▾
               </button>
               {toolsDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-52 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                <div className="absolute left-0 mt-0 w-52 bg-white rounded-b-md shadow-xl border border-gray-200 py-2 z-50 text-gray-800 font-medium">
                   <button
                     onClick={() => handleNav('age-calculator')}
-                    className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-amber-50 flex items-center gap-2 cursor-pointer"
+                    className="w-full px-4 py-2 text-left text-xs text-gray-700 hover:bg-amber-50 hover:text-[#800000] flex items-center gap-2 cursor-pointer font-bold"
                   >
-                    <Calculator className="w-4 h-4 text-amber-600" />
+                    <Calculator className="w-4 h-4 text-[#800000]" />
                     Age Calculator
                   </button>
                   <button
                     onClick={() => handleNav('percentage-calculator')}
-                    className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-amber-50 flex items-center gap-2 cursor-pointer"
+                    className="w-full px-4 py-2 text-left text-xs text-gray-700 hover:bg-amber-50 hover:text-[#800000] flex items-center gap-2 cursor-pointer font-bold"
                   >
-                    <Calculator className="w-4 h-4 text-amber-600" />
+                    <Calculator className="w-4 h-4 text-[#800000]" />
                     Percentage Calculator
                   </button>
                   <button
                     onClick={() => handleNav('exam-calendar')}
-                    className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-amber-50 flex items-center gap-2 cursor-pointer"
+                    className="w-full px-4 py-2 text-left text-xs text-gray-700 hover:bg-amber-50 hover:text-[#800000] flex items-center gap-2 cursor-pointer font-bold"
                   >
-                    <Calendar className="w-4 h-4 text-amber-600" />
+                    <Calendar className="w-4 h-4 text-[#800000]" />
                     Exam Calendar 2026
                   </button>
                 </div>
               )}
             </div>
+
+            <button
+              onClick={() => handleNav('jobs')}
+              className="py-3 px-3 transition-colors cursor-pointer border-b-2 border-transparent text-white hover:bg-[#990000] hover:text-[#ffeb3b]"
+            >
+              STATE JOBS
+            </button>
           </nav>
 
-          {/* Quick Search Action */}
-          <div className="flex items-center gap-2">
+          {/* Quick Search Action button on Right */}
+          <div className="hidden md:flex items-center gap-2 py-2">
             <button
-              id="header-search-btn"
               onClick={onOpenSearch}
-              className="flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg border border-gray-300/80 transition-all cursor-pointer shadow-2xs"
+              className="bg-[#660000] hover:bg-[#550000] text-white text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1.5 cursor-pointer border border-[#990000]"
             >
-              <Search className="w-4 h-4 text-gray-500" />
-              <span className="hidden sm:inline">Search Jobs, Results...</span>
-              <kbd className="hidden sm:inline-block bg-white border border-gray-300 rounded px-1.5 py-0.5 text-[10px] text-gray-500 font-mono">
-                ⌘K
-              </kbd>
-            </button>
-
-            {/* Mobile Hamburger Button */}
-            <button
-              id="mobile-menu-toggle"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100 cursor-pointer"
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <Search className="w-3.5 h-3.5 text-[#ffeb3b]" />
+              <span>Search Portal</span>
             </button>
           </div>
+
+          {/* Mobile menu trigger button */}
+          <div className="md:hidden flex items-center justify-between w-full py-2.5">
+            <span className="font-extrabold text-xs tracking-wider text-[#ffeb3b]">
+              X SARKARI JOB MENU
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={onOpenSearch}
+                className="p-1.5 bg-[#660000] text-[#ffeb3b] rounded cursor-pointer"
+              >
+                <Search className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-1.5 text-white hover:bg-[#660000] rounded cursor-pointer"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+
         </div>
-      </div>
 
-      {/* Mobile Drawer Menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-gray-200 bg-white px-4 pt-3 pb-6 space-y-1 shadow-lg">
-          <div className="mb-3">
-            <button
-              onClick={() => { onOpenSearch(); setMobileMenuOpen(false); }}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-gray-100 rounded-lg text-sm text-gray-700 font-medium border border-gray-300"
-            >
-              <Search className="w-4 h-4" />
-              Search all exams & jobs...
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-1 py-1">
+        {/* Mobile Dropdown Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-[#660000] border-t border-[#800000] px-4 py-3 space-y-1">
             {navItems.map(item => (
               <button
                 key={item.route}
                 onClick={() => handleNav(item.route)}
-                className={`py-2 px-3 text-left rounded-md text-sm font-semibold cursor-pointer ${
-                  currentRoute === item.route 
-                    ? 'text-amber-800 bg-amber-50' 
-                    : 'text-gray-700 hover:bg-gray-50'
-                }`}
+                className="w-full text-left py-2 px-3 text-xs font-bold text-white hover:bg-[#800000] hover:text-[#ffeb3b] rounded flex items-center justify-between"
               >
-                {item.label}
+                <span>{item.label}</span>
+                <span className="text-[10px] text-gray-300">→</span>
               </button>
             ))}
-          </div>
-
-          <div className="border-t border-gray-200 pt-3 mt-2">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider px-3 mb-1">
-              Useful Calculators & Tools
-            </p>
-            <div className="grid grid-cols-2 gap-1">
+            <div className="border-t border-[#800000] pt-2 mt-2">
               <button
                 onClick={() => handleNav('age-calculator')}
-                className="py-1.5 px-3 text-left text-xs font-medium text-gray-600 hover:text-gray-950 flex items-center gap-1.5"
+                className="w-full text-left py-2 px-3 text-xs font-bold text-amber-200 hover:bg-[#800000] rounded"
               >
-                <Calculator className="w-3.5 h-3.5 text-amber-600" />
-                Age Calculator
-              </button>
-              <button
-                onClick={() => handleNav('percentage-calculator')}
-                className="py-1.5 px-3 text-left text-xs font-medium text-gray-600 hover:text-gray-950 flex items-center gap-1.5"
-              >
-                <Calculator className="w-3.5 h-3.5 text-amber-600" />
-                Percentage Calc
+                Age Calculator Tool
               </button>
               <button
                 onClick={() => handleNav('exam-calendar')}
-                className="py-1.5 px-3 text-left text-xs font-medium text-gray-600 hover:text-gray-950 flex items-center gap-1.5"
+                className="w-full text-left py-2 px-3 text-xs font-bold text-amber-200 hover:bg-[#800000] rounded"
               >
-                <Calendar className="w-3.5 h-3.5 text-amber-600" />
-                Exam Calendar
-              </button>
-              <button
-                onClick={() => handleNav('admin')}
-                className="py-1.5 px-3 text-left text-xs font-semibold text-amber-700 flex items-center gap-1.5"
-              >
-                <User className="w-3.5 h-3.5" />
-                Admin Dashboard
+                Exam Calendar 2026
               </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+
     </header>
   );
 };

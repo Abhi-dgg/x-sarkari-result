@@ -248,7 +248,7 @@ export default function App() {
         <button
           onClick={() => handleNavigate('home')}
           className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded text-[10px] font-bold ${
-            currentRoute === 'home' ? 'text-amber-700' : 'text-gray-500 hover:text-gray-900'
+            currentRoute === 'home' ? 'text-[#800000]' : 'text-gray-500 hover:text-gray-900'
           }`}
         >
           <Home className="w-4 h-4" />
@@ -257,7 +257,7 @@ export default function App() {
         <button
           onClick={() => handleNavigate('jobs')}
           className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded text-[10px] font-bold ${
-            currentRoute === 'jobs' ? 'text-amber-700' : 'text-gray-500 hover:text-gray-900'
+            currentRoute === 'jobs' ? 'text-[#800000]' : 'text-gray-500 hover:text-gray-900'
           }`}
         >
           <Briefcase className="w-4 h-4" />
@@ -266,7 +266,7 @@ export default function App() {
         <button
           onClick={() => handleNavigate('results')}
           className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded text-[10px] font-bold ${
-            currentRoute === 'results' ? 'text-amber-700' : 'text-gray-500 hover:text-gray-900'
+            currentRoute === 'results' ? 'text-[#800000]' : 'text-gray-500 hover:text-gray-900'
           }`}
         >
           <Award className="w-4 h-4" />
@@ -275,7 +275,7 @@ export default function App() {
         <button
           onClick={() => handleNavigate('admit-card')}
           className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded text-[10px] font-bold ${
-            currentRoute === 'admit-card' ? 'text-amber-700' : 'text-gray-500 hover:text-gray-900'
+            currentRoute === 'admit-card' ? 'text-[#800000]' : 'text-gray-500 hover:text-gray-900'
           }`}
         >
           <CreditCard className="w-4 h-4" />
