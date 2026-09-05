@@ -1,0 +1,346 @@
+// Prisma Schema for X Sarkari Job Portal
+// Compatible with PostgreSQL, Neon, and local databases
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  EDITOR
+  REVIEWER
+}
+
+enum ContentStatus {
+  DRAFT
+  AI_GENERATED
+  NEEDS_REVIEW
+  VERIFIED
+  PUBLISHED
+  SCHEDULED
+  ARCHIVED
+  REJECTED
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  AI_VERIFIED
+  ADMIN_VERIFIED
+  PUBLISHED
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         Role      @default(EDITOR)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  auditLogs    AuditLog[]
+  revisions    Revision[]
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  orderIndex  Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model State {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Organization {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  slug       String   @unique
+  websiteUrl String?
+  createdAt  DateTime @default(now())
+}
+
+model Job {
+  id                        String             @id @default(uuid())
+  slug                      String             @unique
+  title                     String
+  shortDescription          String
+  organization              String
+  organizationSlug          String
+  recruitmentName           String
+  advertisementNumber       String
+  category                  String
+  state                     String             @default("All India")
+  totalVacancy              String
+  importantDatesJson        String             // JSON string of ImportantDateItem[]
+  applicationFeesJson       String             // JSON string of ApplicationFeeItem[]
+  paymentMode               String             @default("Online through Debit Card / Credit Card / Net Banking")
+  ageLimitMin               Int?
+  ageLimitMax               Int?
+  ageLimitAsOn              String?
+  ageRelaxationRules        String?
+  educationalQualification  String
+  postWiseVacanciesJson     String             // JSON string of VacancyDetail[]
+  selectionProcessJson      String             // JSON string of string[]
+  examPattern               String?
+  salaryPayScale            String?
+  requiredDocumentsJson     String             @default("[]")
+  howToApplyJson            String             // JSON string of string[]
+  importantInstructionsJson String             @default("[]")
+  importantLinksJson        String             // JSON string of ImportantLinkItem[]
+  sourceUrl                 String
+  sourceName                String
+  status                    ContentStatus      @default(DRAFT)
+  verificationStatus        VerificationStatus @default(UNVERIFIED)
+  verifiedBy                String?
+  verifiedDate              DateTime?
+  seoTitle                  String?
+  metaDescription           String?
+  canonicalUrl              String?
+  viewCount                 Int                @default(0)
+  isHot                     Boolean            @default(false)
+  isPinned                  Boolean            @default(false)
+  publishedAt               DateTime           @default(now())
+  createdAt                 DateTime           @default(now())
+  updatedAt                 DateTime           @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([state])
+  @@index([organizationSlug])
+  @@index([publishedAt])
+}
+
+model Result {
+  id                      String             @id @default(uuid())
+  slug                    String             @unique
+  title                   String
+  examName                String
+  organization            String
+  organizationSlug        String
+  category                String
+  resultDate              String
+  examDate                String
+  resultStatus            String             @default("Released")
+  resultLink              String
+  scorecardLink           String?
+  cutoffLink              String?
+  meritListLink           String?
+  officialNotificationUrl String
+  officialWebsiteUrl      String
+  sourceUrl               String
+  verificationStatus      VerificationStatus @default(ADMIN_VERIFIED)
+  status                  ContentStatus      @default(PUBLISHED)
+  summary                 String
+  publishedAt             DateTime           @default(now())
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+
+  @@index([status])
+  @@index([organizationSlug])
+}
+
+model AdmitCard {
+  id                      String             @id @default(uuid())
+  slug                    String             @unique
+  title                   String
+  examName                String
+  organization            String
+  organizationSlug        String
+  category                String
+  releaseDate             String
+  examDate                String
+  downloadLink            String
+  examCityLink            String?
+  instructionsJson        String             @default("[]")
+  officialNotificationUrl String
+  officialWebsiteUrl      String
+  sourceUrl               String
+  verificationStatus      VerificationStatus @default(ADMIN_VERIFIED)
+  status                  ContentStatus      @default(PUBLISHED)
+  publishedAt             DateTime           @default(now())
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+
+  @@index([status])
+  @@index([organizationSlug])
+}
+
+model AnswerKey {
+  id                 String             @id @default(uuid())
+  slug               String             @unique
+  title              String
+  examName           String
+  organization       String
+  category           String
+  releaseDate        String
+  keyType            String             @default("Provisional")
+  objectionStartDate String?
+  objectionEndDate   String?
+  answerKeyLink      String
+  responseSheetLink  String?
+  officialWebsiteUrl String
+  sourceUrl          String
+  verificationStatus VerificationStatus @default(ADMIN_VERIFIED)
+  status             ContentStatus      @default(PUBLISHED)
+  publishedAt        DateTime           @default(now())
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  @@index([status])
+}
+
+model Syllabus {
+  id                 String        @id @default(uuid())
+  slug               String        @unique
+  title              String
+  examName           String
+  organization       String
+  category           String
+  examPatternJson    String        // JSON of tiers/stages
+  detailedSyllabus   String        // JSON of subject breakdown
+  pdfDownloadUrl     String?
+  officialWebsiteUrl String
+  status             ContentStatus @default(PUBLISHED)
+  publishedAt        DateTime      @default(now())
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@index([status])
+}
+
+model Admission {
+  id          String        @id @default(uuid())
+  slug        String        @unique
+  title       String
+  institution String
+  category    String
+  courseName  String
+  lastDate    String
+  eligibility String
+  applyUrl    String
+  status      ContentStatus @default(PUBLISHED)
+  publishedAt DateTime      @default(now())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Scholarship {
+  id          String        @id @default(uuid())
+  slug        String        @unique
+  title       String
+  provider    String
+  amount      String
+  lastDate    String
+  eligibility String
+  applyUrl    String
+  status      ContentStatus @default(PUBLISHED)
+  publishedAt DateTime      @default(now())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Source {
+  id              String   @id @default(uuid())
+  organization    String
+  category        String
+  officialWebsite String
+  sourceUrl       String
+  frequency       String   @default("1h")
+  isActive        Boolean  @default(true)
+  lastChecked     DateTime?
+  status          String   @default("HEALTHY")
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  drafts          AIDraft[]
+}
+
+model AIDraft {
+  id               String   @id @default(uuid())
+  sourceId         String?
+  source           Source?  @relation(fields: [sourceId], references: [id])
+  sourceUrl        String
+  sourceTitle      String
+  organization     String
+  category         String
+  extractedTitle   String
+  extractedDataJson String  // JSON representation of extracted Job fields
+  confidenceScore  Int      @default(0)
+  suspiciousFields String   // JSON array of flagged fields
+  detectedChanges  String   @default("[]") // JSON array of detected changes
+  status           String   @default("NEEDS_REVIEW") // NEEDS_REVIEW, APPROVED, REJECTED
+  rejectionReason  String?
+  reviewedBy       String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([status])
+}
+
+model AIExtraction {
+  id           String   @id @default(uuid())
+  rawPrompt    String
+  rawResponse  String
+  model        String   @default("gemini-3.8-flash")
+  success      Boolean  @default(true)
+  errorMessage String?
+  createdAt    DateTime @default(now())
+}
+
+model Revision {
+  id          String   @id @default(uuid())
+  entityType  String   // JOB, RESULT, ADMIT_CARD
+  entityId    String
+  changedFields String // JSON array of field names
+  changedBy   String
+  user        User?    @relation(fields: [changedBy], references: [id])
+  reason      String
+  snapshotJson String  // JSON snapshot before change
+  createdAt   DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    String   @default("UNREAD") // UNREAD, READ, REPLIED, ARCHIVED
+  createdAt DateTime @default(now())
+}
+
+model NotificationSubscriber {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  categories String   // JSON array of category names
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+}
+
+model SiteSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  valueJson   String
+  updatedAt   DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+}

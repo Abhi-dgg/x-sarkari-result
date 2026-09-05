@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <filter id="subtleShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Circular Badge Background -->
+  <circle cx="256" cy="256" r="248" fill="#0B0F17" stroke="#1E293B" stroke-width="4" />
+
+  <!-- The Iconic Stylized "X" & Graduation Cap -->
+  <g transform="translate(136, 95)" filter="url(#subtleShadow)">
+    <!-- Graduation Cap perched at top right of the X -->
+    <g transform="translate(142, 2)">
+      <!-- Cap diamond top -->
+      <polygon points="35,0 70,18 35,36 0,18" fill="url(#goldGrad)" />
+      <!-- Cap skull base -->
+      <path d="M16,26 C16,36 54,36 54,26 L54,32 C54,42 16,42 16,32 Z" fill="#B45309" />
+      <!-- Head / neck emblem dot -->
+      <circle cx="35" cy="46" r="14" fill="url(#goldGrad)" />
+      <path d="M16,66 C16,56 54,56 54,66 Z" fill="url(#goldGrad)" />
+      <!-- Tassel -->
+      <path d="M7,22 L7,38" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round" />
+      <circle cx="7" cy="40" r="2.5" fill="url(#goldGrad)" />
+    </g>
+
+    <!-- Golden Left Top Diagonal Arrow of X -->
+    <polygon points="0,52 38,52 110,172 72,172" fill="url(#goldGrad)" />
+
+    <!-- Crisp White Intersecting Main X Strokes -->
+    <polygon points="170,72 170,116 112,116 38,230 0,230 76,116 112,116 170,72" fill="#FFFFFF" />
+    
+    <!-- White Right Curved Wing/Loop of X -->
+    <path d="M110,116 L144,72 L185,72 C215,72 238,94 238,124 C238,180 180,230 116,230 L72,230 L140,126 L110,116 Z" fill="#FFFFFF" />
+    <!-- Cutout hole in right wing to form loop -->
+    <path d="M144,120 C144,110 156,98 174,98 C192,98 206,110 206,126 C206,155 175,198 140,202 Z" fill="#0B0F17" />
+  </g>
+
+  <!-- Typography: X SARKARI JOB -->
+  <g transform="translate(256, 375)" text-anchor="middle">
+    <text font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="34" letter-spacing="5">
+      <tspan fill="#F59E0B">X </tspan>
+      <tspan fill="#FFFFFF">SARKARI JOB</tspan>
+    </text>
+  </g>
+
+  <!-- Accent Divider Line & Dot -->
+  <g transform="translate(156, 396)">
+    <line x1="0" y1="0" x2="80" y2="0" stroke="#D97706" stroke-width="2" stroke-linecap="round" />
+    <circle cx="100" cy="0" r="4.5" fill="#FBBF24" />
+    <line x1="120" y1="0" x2="200" y2="0" stroke="#D97706" stroke-width="2" stroke-linecap="round" />
+  </g>
+</svg>

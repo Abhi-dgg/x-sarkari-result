@@ -1,0 +1,6 @@
+{
+  "name": "X Sarkari Job",
+  "description": "Comprehensive, modern Indian government jobs, exam results, admit cards, answer keys, syllabus, and source-verified updates portal with Gemini AI extraction and source monitoring.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,17 @@
+{
+  "short_name": "XSarkariJob",
+  "name": "X Sarkari Job - Indian Government Jobs & Exams",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0B0F17",
+  "theme_color": "#111827",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "scope": "/"
+}
