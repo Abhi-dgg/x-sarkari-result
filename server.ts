@@ -3,7 +3,9 @@ import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { db } from './server/db';
 import { geminiService } from './server/gemini';
+import { aiService, AI_MODELS } from './server/aiService';
 import { monitoringService } from './server/monitoring';
+import { syncService } from './server/syncService';
 
 const PORT = 3000;
 
@@ -141,6 +143,29 @@ Sitemap: ${siteUrl}/sitemap.xml
       platform: 'X Sarkari Job API',
       geminiConfigured: !!process.env.GEMINI_API_KEY
     });
+  });
+
+  // Real-Time 24/7 Sync with Result Bharat & Sarkari Result
+  app.get('/api/sync/live', (req: Request, res: Response) => {
+    res.json(syncService.getStatus());
+  });
+
+  app.get('/api/sync/monitoring-status', (req: Request, res: Response) => {
+    res.json(syncService.getStatus());
+  });
+
+  app.post('/api/sync/live', (req: Request, res: Response) => {
+    const result = syncService.triggerSync();
+    res.json(result);
+  });
+
+  app.post('/api/sync/scan-both-portals', (req: Request, res: Response) => {
+    const result = syncService.triggerSync();
+    res.json(result);
+  });
+
+  app.get('/api/sync/resultbharat', (req: Request, res: Response) => {
+    res.json(syncService.getStatus());
   });
 
   // Breaking notices ticker
@@ -324,8 +349,48 @@ Sitemap: ${siteUrl}/sitemap.xml
   });
 
   // ==========================================
-  // AI & Official Source Monitoring APIs
+  // Official Attachment Link Fallback Redirect
   // ==========================================
+  app.get(['/api/attachment/*', '/uploads/*', '*/Notice_GD_2026.pdf', '*/Notice_CGL_2026.pdf'], (req: Request, res: Response) => {
+    // Graceful redirect to the live official notice board
+    res.redirect(302, 'https://ssc.gov.in/notice-board');
+  });
+
+  // ==========================================
+  // Multi-Model AI (GPT-4o, Claude 3.5, Grok, Gemini)
+  // ==========================================
+  app.get('/api/ai/models', (req: Request, res: Response) => {
+    res.json(AI_MODELS);
+  });
+
+  app.post('/api/ai/chat', async (req: Request, res: Response) => {
+    const { message, model, context } = req.body;
+    if (!message || typeof message !== 'string' || !message.trim()) {
+      res.status(400).json({ error: 'Message is required' });
+      return;
+    }
+    try {
+      const response = await aiService.chat(message.trim(), model || 'gpt-4o', context);
+      res.json(response);
+    } catch (err: any) {
+      res.status(500).json({ error: err?.message || 'AI chat request failed' });
+    }
+  });
+
+  app.post('/api/ai/fact-check', async (req: Request, res: Response) => {
+    const { query } = req.body;
+    if (!query || typeof query !== 'string' || !query.trim()) {
+      res.status(400).json({ error: 'Query is required for fact checking' });
+      return;
+    }
+    try {
+      const report = await geminiService.factCheckAndReview(query.trim());
+      res.json(report);
+    } catch (err: any) {
+      res.status(500).json({ error: err?.message || 'Fact-checking failed' });
+    }
+  });
+
   app.post('/api/ai/extract', async (req: Request, res: Response) => {
     const { sourceText, sourceUrl } = req.body;
     if (!sourceText && !sourceUrl) {

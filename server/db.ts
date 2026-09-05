@@ -126,8 +126,13 @@ export const db = {
     return jobs[index];
   },
 
-  deleteJob: (slug: string) => {
-    const index = jobs.findIndex(j => j.slug === slug);
+  deleteJob: (slugOrId: string) => {
+    const target = (slugOrId || '').trim();
+    const index = jobs.findIndex(j => 
+      j.slug === target || 
+      j.id === target || 
+      j.slug.toLowerCase() === target.toLowerCase()
+    );
     if (index === -1) return false;
     jobs.splice(index, 1);
     return true;
@@ -154,6 +159,13 @@ export const db = {
     results.unshift(item);
     return item;
   },
+  deleteResult: (slugOrId: string) => {
+    const target = (slugOrId || '').trim();
+    const index = results.findIndex(r => r.slug === target || r.id === target);
+    if (index === -1) return false;
+    results.splice(index, 1);
+    return true;
+  },
 
   // Admit Cards
   getAdmitCards: (options?: { category?: string; limit?: number }) => {
@@ -169,6 +181,13 @@ export const db = {
     admitCards.unshift(item);
     return item;
   },
+  deleteAdmitCard: (slugOrId: string) => {
+    const target = (slugOrId || '').trim();
+    const index = admitCards.findIndex(a => a.slug === target || a.id === target);
+    if (index === -1) return false;
+    admitCards.splice(index, 1);
+    return true;
+  },
 
   // Answer Keys
   getAnswerKeys: (options?: { category?: string; limit?: number }) => {
@@ -178,6 +197,18 @@ export const db = {
     }
     if (options?.limit) list = list.slice(0, options.limit);
     return list;
+  },
+  getAnswerKeyBySlug: (slug: string) => answerKeys.find(ak => ak.slug === slug),
+  createAnswerKey: (item: AnswerKeyItem) => {
+    answerKeys.unshift(item);
+    return item;
+  },
+  deleteAnswerKey: (slugOrId: string) => {
+    const target = (slugOrId || '').trim();
+    const index = answerKeys.findIndex(ak => ak.slug === target || ak.id === target);
+    if (index === -1) return false;
+    answerKeys.splice(index, 1);
+    return true;
   },
   getAnswerKeyBySlug: (slug: string) => answerKeys.find(ak => ak.slug === slug),
   createAnswerKey: (item: AnswerKeyItem) => {

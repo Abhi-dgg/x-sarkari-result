@@ -46,11 +46,13 @@ export interface VacancyDetail {
 export interface ImportantLinkItem {
   label: string;
   url: string;
-  linkType: 'APPLY' | 'NOTIFICATION' | 'OFFICIAL_WEBSITE' | 'ADMIT_CARD' | 'RESULT' | 'ANSWER_KEY' | 'SYLLABUS' | 'CORRECTION' | 'OTHER';
+  linkType?: 'APPLY' | 'NOTIFICATION' | 'OFFICIAL_WEBSITE' | 'ADMIT_CARD' | 'RESULT' | 'ANSWER_KEY' | 'SYLLABUS' | 'CORRECTION' | 'OTHER';
   isOfficial: boolean;
   status?: number; // 200, 404, etc.
   lastChecked?: string;
 }
+
+export type ImportantLink = ImportantLinkItem;
 
 export interface Job {
   id: string;
@@ -77,9 +79,9 @@ export interface Job {
   examPattern?: string;
   syllabusOverview?: string;
   salaryPayScale?: string;
-  requiredDocuments: string[];
-  howToApply: string[];
-  importantInstructions: string[];
+  requiredDocuments?: string[];
+  howToApply?: string[];
+  importantInstructions?: string[];
   importantLinks: ImportantLinkItem[];
   sourceUrl: string;
   sourceName: string;
@@ -115,6 +117,7 @@ export interface ResultItem {
   officialNotificationUrl: string;
   officialWebsiteUrl: string;
   sourceUrl: string;
+  importantLinks?: ImportantLink[];
   verificationStatus: VerificationStatus;
   status: ContentStatus;
   summary: string;
@@ -138,6 +141,7 @@ export interface AdmitCardItem {
   officialNotificationUrl: string;
   officialWebsiteUrl: string;
   sourceUrl: string;
+  importantLinks?: ImportantLink[];
   verificationStatus: VerificationStatus;
   status: ContentStatus;
   publishedAt: string;
@@ -212,6 +216,33 @@ export interface Source {
   notes?: string;
 }
 
+export interface FactCheckReport {
+  query: string;
+  verificationStatus: 'OFFICIALLY_VERIFIED' | 'APPLICATION_ACTIVE' | 'ADMIT_CARD_RELEASED' | 'RESULT_DECLARED' | 'EXAM_SCHEDULED' | 'FAKE_NOTICE_DEBUNKED' | 'TENTATIVE';
+  resultBharatVerified?: boolean;
+  resultBharatStatus?: string;
+  resultBharatUrl?: string;
+  verdictHeadline: string;
+  hindiSummary: string;
+  englishSummary: string;
+  officialGovernmentSource: string;
+  educationalReferences: string[]; // e.g. Testbook, PhysicsWallah (PW), Adda247
+  pibFactCheckStatus: string; // Official PIB / Commission bulletin status
+  keyFacts: {
+    organization: string;
+    totalVacancies: string;
+    applicationWindow: string;
+    examDate: string;
+    eligibility: string;
+    admitCardStatus: string;
+    resultStatus: string;
+  };
+  directLinks: { label: string; url: string; isOfficial: boolean }[];
+  groundingSources: { title: string; url: string }[];
+  confidenceScore: number;
+  lastCheckedAt: string;
+}
+
 export interface AIDraft {
   id: string;
   sourceId: string;
@@ -226,6 +257,9 @@ export interface AIDraft {
   detectedChanges?: string[];
   status: 'NEEDS_REVIEW' | 'APPROVED' | 'REJECTED';
   rejectionReason?: string;
+  pibVerified?: boolean;
+  educationalReferences?: string[];
+  factCheckVerdict?: string;
   createdAt: string;
   reviewedBy?: string;
 }

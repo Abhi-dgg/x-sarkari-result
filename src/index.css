@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @keyframes marquee {
   0% {
     transform: translateX(0%);
@@ -17,3 +19,4 @@
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+

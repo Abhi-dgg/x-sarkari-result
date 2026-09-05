@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Mail, Send, ExternalLink, AlertCircle, Heart } from 'lucide-react';
+import { ShieldCheck, ExternalLink, AlertCircle } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (route: string) => void;
@@ -30,26 +30,26 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="bg-gray-900 text-gray-300 border-t border-gray-800 pt-12 pb-8 mt-16">
+    <footer className="bg-[#0b172a] dark:bg-slate-950 text-gray-300 border-t border-[#1e293b] dark:border-slate-800 pt-12 pb-8 mt-16 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Newsletter Subscription Alert Box */}
-        <div className="bg-gray-800/80 rounded-xl p-6 sm:p-8 border border-gray-700/80 mb-12 shadow-sm">
+        <div className="bg-[#112240] dark:bg-slate-900/90 rounded-xl p-6 sm:p-8 border border-[#1e3a8a]/40 dark:border-slate-800 mb-12 shadow-sm">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             <div className="lg:col-span-7">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30 mb-2">
-                <ShieldCheck className="w-3.5 h-3.5" /> Fast Alert Notifications
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300 border border-blue-500/30 mb-2">
+                <ShieldCheck className="w-3.5 h-3.5" /> Instant Exam Alerts
               </span>
               <h3 className="text-xl font-bold text-white tracking-tight">
                 Never Miss an Important Government Job or Exam Result
               </h3>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-gray-300 dark:text-slate-400 mt-1">
                 Get instant updates on SSC, UPSC, Railway, Police, and Banking recruitment notifications directly to your inbox.
               </p>
             </div>
             <div className="lg:col-span-5">
               {subscribed ? (
-                <div className="bg-emerald-950/60 border border-emerald-600/50 rounded-lg p-3 text-emerald-300 text-sm font-medium text-center">
+                <div className="bg-emerald-950/70 border border-emerald-600/50 rounded-lg p-3 text-emerald-300 text-sm font-medium text-center">
                   ✓ Thank you! You will receive verified exam alerts.
                 </div>
               ) : (
@@ -60,12 +60,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     placeholder="Enter your email address..."
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    className="flex-1 bg-gray-900 border border-gray-700 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-hidden focus:border-amber-500 focus:ring-1 focus:ring-amber-500 placeholder-gray-500"
+                    className="flex-1 bg-[#0b172a] dark:bg-slate-950 border border-gray-700 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-gray-400"
                   />
                   <button
                     type="submit"
                     disabled={subscribing}
-                    className="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-5 py-2.5 rounded-lg text-sm transition-colors cursor-pointer disabled:opacity-50 shrink-0"
+                    className="bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-bold px-5 py-2.5 rounded-lg text-sm transition-colors cursor-pointer disabled:opacity-50 shrink-0 shadow-xs"
                   >
                     {subscribing ? 'Joining...' : 'Subscribe'}
                   </button>
@@ -84,18 +84,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <img src="/logo.svg" alt="X Sarkari Job" className="w-10 h-10 rounded-full" />
               <div>
                 <span className="text-lg font-black tracking-tight text-white uppercase">
-                  <span className="text-amber-500">X</span> SARKARI JOB
+                  <span className="text-yellow-400">X</span> SARKARI JOB
                 </span>
-                <span className="ml-2 text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded">
+                <span className="ml-2 text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 px-1.5 py-0.5 rounded">
                   Govt Alerts
                 </span>
               </div>
             </div>
-            <p className="text-xs text-gray-400 leading-relaxed mb-4 pr-6">
+            <p className="text-xs text-gray-300 dark:text-slate-400 leading-relaxed mb-4 pr-6">
               X Sarkari Job (xsarkarijob.com) is an independent government examination and career information portal providing fast, verified updates on Sarkari Naukri, Admit Cards, Answer Keys, Results, and detailed syllabi across India.
             </p>
-            <div className="flex items-center gap-3 text-xs text-gray-400">
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <div className="flex items-center gap-3 text-xs text-gray-400 dark:text-slate-400">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
               <span>Official Sources Checked Real-time</span>
             </div>
           </div>
@@ -107,32 +107,32 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <button onClick={() => onNavigate('jobs')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('jobs')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Latest Jobs 2026
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('results')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('results')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Exam Results
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('admit-card')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('admit-card')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Admit Cards
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('answer-key')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('answer-key')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Answer Keys
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('syllabus')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('syllabus')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Exam Syllabus
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('admission')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('admission')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Admission Forms
                 </button>
               </li>
@@ -146,27 +146,27 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <button onClick={() => onNavigate('age-calculator')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('age-calculator')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Age Calculator
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('percentage-calculator')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('percentage-calculator')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Percentage Calculator
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('exam-calendar')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('exam-calendar')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Exam Calendar
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('jobs')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('jobs')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   State-wise Jobs
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('scholarship')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('scholarship')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Scholarships
                 </button>
               </li>
@@ -180,32 +180,32 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <button onClick={() => onNavigate('about')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('about')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   About Us
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('contact')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('contact')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Contact Us
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('disclaimer')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('disclaimer')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Disclaimer
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('privacy-policy')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('privacy-policy')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Privacy Policy
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('terms')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('terms')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Terms & Conditions
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('cookie-policy')} className="hover:text-amber-400 transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('cookie-policy')} className="hover:text-yellow-400 dark:hover:text-blue-400 transition-colors cursor-pointer">
                   Cookie Policy
                 </button>
               </li>
@@ -236,7 +236,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               Robots.txt <ExternalLink className="w-3 h-3" />
             </a>
             <span>•</span>
-            <button onClick={() => onNavigate('admin')} className="hover:text-amber-400">
+            <button onClick={() => onNavigate('admin')} className="hover:text-yellow-400 cursor-pointer">
               Admin Portal
             </button>
           </div>

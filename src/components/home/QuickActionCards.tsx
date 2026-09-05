@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRight, Sparkles, Flame } from 'lucide-react';
+import { Flame, Sparkles } from 'lucide-react';
 
 interface QuickActionCardsProps {
   onNavigate: (route: string) => void;
@@ -15,52 +15,68 @@ export const QuickActionCards: React.FC<QuickActionCardsProps> = ({ onNavigate }
   // Iconic Result Bharat Trending Hot Boxed Links
   const trendingBoxes = [
     {
-      title: 'SSC CGL 2026 Apply Online',
-      route: 'job:ssc-cgl-2026',
-      bgColor: 'bg-[#d32f2f] hover:bg-[#b71c1c]',
-      tag: '17,727 Posts'
-    },
-    {
       title: 'Railway RRB NTPC 2026 Form',
       route: 'job:rrb-ntpc-2026',
-      bgColor: 'bg-[#1976d2] hover:bg-[#1565c0]',
-      tag: '11,558 Posts'
+      bgLight: 'bg-[#1e40af] hover:bg-[#1d4ed8]',
+      bgDark: 'dark:bg-blue-900/90 dark:hover:bg-blue-800 dark:border-blue-700',
+      tag: '11,558 Posts [New]',
+      borderColor: 'border-blue-950'
     },
     {
-      title: 'UPSC Civil Services 2026 Result',
-      route: 'result:upsc-cse-prelims-2026',
-      bgColor: 'bg-[#2e7d32] hover:bg-[#1b5e20]',
-      tag: 'Marks Out'
+      title: 'SSC GD Constable 2026 Online Form',
+      route: 'job:ssc-gd-constable-2026',
+      bgLight: 'bg-[#b91c1c] hover:bg-[#991b1b]',
+      bgDark: 'dark:bg-red-950/90 dark:hover:bg-red-900 dark:border-red-700',
+      tag: '39,481 Posts [Active]',
+      borderColor: 'border-red-950'
+    },
+    {
+      title: 'UP Police 60,244 Answer Key',
+      route: 'answer-key:up-police-constable-re-exam-answer-key-2026',
+      bgLight: 'bg-[#0f766e] hover:bg-[#115e59]',
+      bgDark: 'dark:bg-teal-950/90 dark:hover:bg-teal-900 dark:border-teal-700',
+      tag: 'Master Key Out',
+      borderColor: 'border-teal-950'
     },
     {
       title: 'Bihar Police Constable Admit Card',
       route: 'admit-card:csbc-bihar-police-constable-2026',
-      bgColor: 'bg-[#e65100] hover:bg-[#bf360c]',
-      tag: 'Download Link'
+      bgLight: 'bg-[#c2410c] hover:bg-[#9a3412]',
+      bgDark: 'dark:bg-orange-950/90 dark:hover:bg-orange-900 dark:border-orange-700',
+      tag: 'Direct Download',
+      borderColor: 'border-orange-950'
     },
     {
-      title: 'UP Police Constable Exam 2026',
-      route: 'job:ssc-cgl-2026',
-      bgColor: 'bg-[#7b1fa2] hover:bg-[#6a1b9a]',
-      tag: 'City Slip'
+      title: 'BPSC 70th Integrated CCE Pre Form',
+      route: 'job:bpsc-70th-cce-2026',
+      bgLight: 'bg-[#6d28d9] hover:bg-[#5b21b6]',
+      bgDark: 'dark:bg-purple-950/90 dark:hover:bg-purple-900 dark:border-purple-700',
+      tag: '1,957 Posts',
+      borderColor: 'border-purple-950'
     },
     {
-      title: 'IBPS PO Recruitment 2026',
-      route: 'job:ibps-po-xiv-2026',
-      bgColor: 'bg-[#00838f] hover:bg-[#006064]',
-      tag: '3,955 Posts'
+      title: 'UPSC Civil Services 2026 Result',
+      route: 'result:upsc-cse-prelims-2026',
+      bgLight: 'bg-[#15803d] hover:bg-[#166534]',
+      bgDark: 'dark:bg-emerald-950/90 dark:hover:bg-emerald-900 dark:border-emerald-700',
+      tag: 'Marks & Cutoff',
+      borderColor: 'border-emerald-950'
     },
     {
-      title: 'Indian Army Agniveer Rally 2026',
-      route: 'job:ssc-cgl-2026',
-      bgColor: 'bg-[#880e4f] hover:bg-[#4a148c]',
-      tag: 'Rally Online'
+      title: 'SSC CGL 2026 Tier 1 Admit Card',
+      route: 'admit-card:ssc-cgl-tier-1-admit-card-2026',
+      bgLight: 'bg-[#831843] hover:bg-[#701a75]',
+      bgDark: 'dark:bg-pink-950/90 dark:hover:bg-pink-900 dark:border-pink-700',
+      tag: 'City Slip Live',
+      borderColor: 'border-pink-950'
     },
     {
-      title: 'Airforce Agniveer Vayu Intake',
-      route: 'job:ssc-cgl-2026',
-      bgColor: 'bg-[#0d47a1] hover:bg-[#1a237e]',
-      tag: '01/2026 Batch'
+      title: 'NEET UG 2026 Scorecard & Rank',
+      route: 'result:upsc-cse-prelims-2026',
+      bgLight: 'bg-[#0369a1] hover:bg-[#075985]',
+      bgDark: 'dark:bg-sky-950/90 dark:hover:bg-sky-900 dark:border-sky-700',
+      tag: 'Counseling Open',
+      borderColor: 'border-sky-950'
     },
   ];
 
@@ -68,12 +84,12 @@ export const QuickActionCards: React.FC<QuickActionCardsProps> = ({ onNavigate }
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
       {/* Top Banner Indicator */}
       <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-1.5 text-xs font-black text-[#800000] uppercase tracking-wider">
+        <div className="flex items-center gap-1.5 text-xs font-black text-[#0f2347] dark:text-blue-400 uppercase tracking-wider">
           <Flame className="w-4 h-4 fill-current text-red-600 animate-bounce" />
-          <span>Trending Online Forms & Fast Links</span>
+          <span>Trending Online Forms & Fast Links 2026</span>
         </div>
-        <span className="text-[11px] text-gray-500 hidden sm:inline font-semibold">
-          Click any box below for direct application or admit card portal
+        <span className="text-[11px] text-gray-500 dark:text-gray-400 hidden sm:inline font-semibold">
+          Click any box below for direct official application or admit card portal
         </span>
       </div>
 
@@ -83,12 +99,12 @@ export const QuickActionCards: React.FC<QuickActionCardsProps> = ({ onNavigate }
           <div
             key={idx}
             onClick={() => onNavigate(box.route)}
-            className={`${box.bgColor} text-white rounded-md p-3 sm:p-3.5 shadow-sm hover:shadow-md cursor-pointer transition-all duration-150 transform hover:-translate-y-0.5 text-center flex flex-col justify-center items-center select-none border border-black/10 group`}
+            className={`${box.bgLight} ${box.bgDark} text-white rounded-md p-3 sm:p-3.5 shadow-sm hover:shadow-md cursor-pointer transition-all duration-150 transform hover:-translate-y-0.5 text-center flex flex-col justify-center items-center select-none border ${box.borderColor} group`}
           >
-            <h3 className="text-xs sm:text-sm font-extrabold tracking-tight leading-snug group-hover:underline">
+            <h3 className="text-xs sm:text-sm font-black tracking-tight leading-snug group-hover:underline">
               {box.title}
             </h3>
-            <span className="mt-1.5 text-[10px] sm:text-[11px] font-bold bg-black/25 text-[#ffeb3b] px-2 py-0.5 rounded">
+            <span className="mt-1.5 text-[10px] sm:text-[11px] font-extrabold bg-black/35 text-[#ffeb3b] px-2 py-0.5 rounded border border-yellow-400/20">
               {box.tag}
             </span>
           </div>

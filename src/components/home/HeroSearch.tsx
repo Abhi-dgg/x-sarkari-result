@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ChevronRight } from 'lucide-react';
+import { Search, ChevronRight, TrendingUp } from 'lucide-react';
 
 interface HeroSearchProps {
   categories: string[];
@@ -13,8 +13,6 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
   categories,
   states,
   onSearch,
-  onSelectCategory,
-  onSelectState
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -25,23 +23,23 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
     onSearch(searchTerm, selectedCategory === 'All' ? undefined : selectedCategory, selectedState === 'All India' ? undefined : selectedState);
   };
 
-  const popularPills = ['SSC CGL', 'RRB NTPC', 'UPSC IAS', 'Bihar Police', 'UP Police', 'IBPS PO', 'Agniveer'];
+  const popularPills = ['RRB NTPC 2026', 'SSC GD 2026', 'UP Police', 'BPSC 70th', 'UPSC CSE', 'Bihar Police', 'IBPS PO', 'Agniveer'];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-      {/* Compact Result Bharat Search Bar */}
-      <div className="bg-white border-2 border-[#800000] rounded-lg p-2.5 sm:p-3 shadow-xs">
+      {/* High-Density Result Bharat Search Bar */}
+      <div className="bg-white dark:bg-slate-900 border-2 border-[#1e3a8a] dark:border-blue-700 rounded-lg p-2.5 sm:p-3 shadow-xs transition-colors">
         <form onSubmit={handleFormSubmit} className="flex flex-col md:flex-row items-center gap-2">
           
           {/* Main Search Input */}
           <div className="relative flex-1 w-full flex items-center">
-            <Search className="w-4 h-4 text-gray-500 absolute left-3 pointer-events-none" />
+            <Search className="w-4 h-4 text-gray-500 dark:text-gray-400 absolute left-3 pointer-events-none" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search Sarkari Naukri, Admit Card, Result, Exam (e.g. SSC, Railway, Police)..."
-              className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm font-medium border border-gray-300 rounded focus:outline-hidden focus:border-[#800000] text-gray-900 placeholder-gray-500"
+              placeholder="Search Sarkari Naukri, Admit Card, Result, Exam (e.g. SSC, Railway, Police, BPSC)..."
+              className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm font-medium border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-950 rounded focus:outline-hidden focus:border-[#1e3a8a] text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-gray-400"
             />
           </div>
 
@@ -50,7 +48,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full py-2 px-2.5 text-xs text-gray-800 bg-white border border-gray-300 rounded focus:outline-hidden focus:border-[#800000] cursor-pointer font-medium"
+              className="w-full py-2 px-2.5 text-xs text-gray-800 dark:text-slate-200 bg-white dark:bg-slate-950 border border-gray-300 dark:border-slate-700 rounded focus:outline-hidden focus:border-[#1e3a8a] cursor-pointer font-medium"
             >
               <option value="All">All Categories</option>
               {categories.map((c) => (
@@ -64,7 +62,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
             <select
               value={selectedState}
               onChange={(e) => setSelectedState(e.target.value)}
-              className="w-full py-2 px-2.5 text-xs text-gray-800 bg-white border border-gray-300 rounded focus:outline-hidden focus:border-[#800000] cursor-pointer font-medium"
+              className="w-full py-2 px-2.5 text-xs text-gray-800 dark:text-slate-200 bg-white dark:bg-slate-950 border border-gray-300 dark:border-slate-700 rounded focus:outline-hidden focus:border-[#1e3a8a] cursor-pointer font-medium"
             >
               <option value="All India">All India</option>
               {states.filter(s => s !== 'All India').map((s) => (
@@ -73,19 +71,21 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
             </select>
           </div>
 
-          {/* Search Button (Result Bharat Maroon) */}
+          {/* Search Button (Royal Navy & Sapphire Theme) */}
           <button
             type="submit"
-            className="w-full md:w-auto bg-[#800000] hover:bg-[#660000] text-white font-bold px-6 py-2 rounded text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0 uppercase tracking-wider"
+            className="w-full md:w-auto bg-[#1e40af] hover:bg-[#1d4ed8] text-white font-black px-6 py-2 rounded text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0 uppercase tracking-wider shadow-xs"
           >
             <span>Search</span>
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-4 h-4 text-yellow-300" />
           </button>
         </form>
 
-        {/* Quick Keyword Pills */}
-        <div className="mt-2.5 pt-2 border-t border-gray-100 flex flex-wrap items-center gap-1.5 text-xs">
-          <span className="font-extrabold text-[#800000] text-[11px] uppercase mr-1">Trending:</span>
+        {/* Quick Keyword Trending Pills */}
+        <div className="mt-2.5 pt-2 border-t border-gray-100 dark:border-slate-800 flex flex-wrap items-center gap-1.5 text-xs">
+          <span className="font-extrabold text-[#1e40af] dark:text-blue-400 text-[11px] uppercase mr-1 flex items-center gap-1">
+            <TrendingUp className="w-3 h-3" /> Trending:
+          </span>
           {popularPills.map((p) => (
             <button
               key={p}
@@ -93,7 +93,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
                 setSearchTerm(p);
                 onSearch(p);
               }}
-              className="px-2 py-0.5 rounded bg-gray-100 hover:bg-[#800000] hover:text-white text-gray-800 text-[11px] font-semibold transition-colors cursor-pointer border border-gray-200"
+              className="px-2 py-0.5 rounded bg-gray-100 dark:bg-slate-800 hover:bg-[#1e40af] dark:hover:bg-blue-600 hover:text-white dark:text-slate-200 text-gray-800 text-[11px] font-semibold transition-colors cursor-pointer border border-gray-200 dark:border-slate-700"
             >
               {p}
             </button>
