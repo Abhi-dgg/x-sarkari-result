@@ -6,6 +6,7 @@ import { geminiService } from './server/gemini';
 import { aiService, AI_MODELS } from './server/aiService';
 import { monitoringService } from './server/monitoring';
 import { syncService } from './server/syncService';
+import { clearSessionCookie, createSession, requireRole, setSessionCookie, validateOfficialUrl, verifyPassword } from './server/security';
 
 const PORT = 3000;
 
@@ -15,12 +16,26 @@ async function startServer() {
   // JSON & URL-encoded body parser
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+  app.disable('x-powered-by');
+
+  const requestCounts = new Map<string, { count: number; resetAt: number }>();
+  app.use('/api', (req, res, next) => {
+    const key = `${req.ip}:${req.path}`;
+    const entry = requestCounts.get(key);
+    const now = Date.now();
+    const state = !entry || entry.resetAt < now ? { count: 0, resetAt: now + 60_000 } : entry;
+    state.count += 1;
+    requestCounts.set(key, state);
+    if (state.count > 60) return res.status(429).json({ error: 'Too many requests. Please try again shortly.' });
+    next();
+  });
 
   // Basic request logger & security headers
   app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
     next();
   });
 
@@ -154,12 +169,12 @@ Sitemap: ${siteUrl}/sitemap.xml
     res.json(syncService.getStatus());
   });
 
-  app.post('/api/sync/live', (req: Request, res: Response) => {
+  app.post('/api/sync/live', requireRole('SUPER_ADMIN', 'EDITOR'), (req: Request, res: Response) => {
     const result = syncService.triggerSync();
     res.json(result);
   });
 
-  app.post('/api/sync/scan-both-portals', (req: Request, res: Response) => {
+  app.post('/api/sync/scan-both-portals', requireRole('SUPER_ADMIN', 'EDITOR'), (req: Request, res: Response) => {
     const result = syncService.triggerSync();
     res.json(result);
   });
@@ -257,8 +272,16 @@ Sitemap: ${siteUrl}/sitemap.xml
     });
   });
 
-  app.post('/api/jobs', (req: Request, res: Response) => {
+  app.post('/api/jobs', requireRole('SUPER_ADMIN', 'EDITOR'), (req: Request, res: Response) => {
     try {
+      if (req.user?.role !== 'SUPER_ADMIN' && (req.body?.status === 'PUBLISHED' || req.body?.verificationStatus === 'ADMIN_VERIFIED')) {
+        res.status(403).json({ error: 'Only a super administrator can publish or mark content as admin verified.' });
+        return;
+      }
+      if (!req.body?.slug || !req.body?.title || !req.body?.sourceUrl) {
+        res.status(400).json({ error: 'slug, title, and sourceUrl are required.' });
+        return;
+      }
       const newJob = db.createJob(req.body);
       res.status(201).json(newJob);
     } catch (e: any) {
@@ -266,7 +289,11 @@ Sitemap: ${siteUrl}/sitemap.xml
     }
   });
 
-  app.put('/api/jobs/:slug', (req: Request, res: Response) => {
+  app.put('/api/jobs/:slug', requireRole('SUPER_ADMIN', 'EDITOR'), (req: Request, res: Response) => {
+    if (req.user?.role !== 'SUPER_ADMIN' && (req.body.status === 'PUBLISHED' || req.body.verificationStatus === 'ADMIN_VERIFIED')) {
+      res.status(403).json({ error: 'Only a super administrator can publish or mark content as admin verified.' });
+      return;
+    }
     const updated = db.updateJob(req.params.slug, req.body);
     if (!updated) {
       res.status(404).json({ error: 'Job not found' });
@@ -275,7 +302,7 @@ Sitemap: ${siteUrl}/sitemap.xml
     res.json(updated);
   });
 
-  app.delete('/api/jobs/:slug', (req: Request, res: Response) => {
+  app.delete('/api/jobs/:slug', requireRole('SUPER_ADMIN'), (req: Request, res: Response) => {
     const ok = db.deleteJob(req.params.slug);
     if (!ok) {
       res.status(404).json({ error: 'Job not found' });
@@ -391,7 +418,7 @@ Sitemap: ${siteUrl}/sitemap.xml
     }
   });
 
-  app.post('/api/ai/extract', async (req: Request, res: Response) => {
+  app.post('/api/ai/extract', requireRole('SUPER_ADMIN', 'EDITOR', 'REVIEWER'), async (req: Request, res: Response) => {
     const { sourceText, sourceUrl } = req.body;
     if (!sourceText && !sourceUrl) {
       res.status(400).json({ error: 'Missing sourceText or sourceUrl' });
@@ -405,7 +432,7 @@ Sitemap: ${siteUrl}/sitemap.xml
     }
   });
 
-  app.post('/api/ai/seo', async (req: Request, res: Response) => {
+  app.post('/api/ai/seo', requireRole('SUPER_ADMIN', 'EDITOR'), async (req: Request, res: Response) => {
     const { title, organization, category } = req.body;
     try {
       const seo = await geminiService.generateSEO(title || '', organization || '', category || 'Jobs');
@@ -415,11 +442,11 @@ Sitemap: ${siteUrl}/sitemap.xml
     }
   });
 
-  app.get('/api/ai/drafts', (req: Request, res: Response) => {
+  app.get('/api/ai/drafts', requireRole('SUPER_ADMIN', 'EDITOR', 'REVIEWER'), (req: Request, res: Response) => {
     res.json(db.getAIDrafts());
   });
 
-  app.post('/api/ai/drafts/:id/approve', (req: Request, res: Response) => {
+  app.post('/api/ai/drafts/:id/approve', requireRole('SUPER_ADMIN', 'EDITOR'), (req: Request, res: Response) => {
     const draft = db.getAIDraftById(req.params.id);
     if (!draft) {
       res.status(404).json({ error: 'AI Draft not found' });
@@ -457,10 +484,8 @@ Sitemap: ${siteUrl}/sitemap.xml
       importantLinks: draftData.importantLinks || [],
       sourceUrl: draft.sourceUrl,
       sourceName: `${draft.organization} Official Release`,
-      status: 'PUBLISHED',
-      verificationStatus: 'ADMIN_VERIFIED',
-      verifiedBy: 'Administrator',
-      verifiedDate: new Date().toISOString(),
+      status: 'NEEDS_REVIEW',
+      verificationStatus: 'AI_VERIFIED',
       seoTitle: `${draft.extractedTitle} - Check Details | X Sarkari Job`,
       metaDescription: `Apply for ${draft.extractedTitle} by ${draft.organization}. Check eligibility, dates, and direct links.`,
       canonicalUrl: `https://xsarkarijob.com/jobs/${draftData.slug}`,
@@ -468,10 +493,10 @@ Sitemap: ${siteUrl}/sitemap.xml
     });
 
     db.updateAIDraftStatus(req.params.id, 'APPROVED');
-    res.json({ success: true, job: publishedJob });
+    res.json({ success: true, job: publishedJob, message: 'Draft converted to a job awaiting human verification and publication.' });
   });
 
-  app.post('/api/ai/drafts/:id/reject', (req: Request, res: Response) => {
+  app.post('/api/ai/drafts/:id/reject', requireRole('SUPER_ADMIN', 'EDITOR', 'REVIEWER'), (req: Request, res: Response) => {
     const { reason } = req.body;
     const updated = db.updateAIDraftStatus(req.params.id, 'REJECTED', reason || 'Rejected by Admin');
     if (!updated) {
@@ -482,16 +507,30 @@ Sitemap: ${siteUrl}/sitemap.xml
   });
 
   // Source Monitoring Management
-  app.get('/api/sources', (req: Request, res: Response) => {
+  app.get('/api/sources', requireRole('SUPER_ADMIN', 'EDITOR', 'REVIEWER'), (req: Request, res: Response) => {
     res.json(db.getSources());
   });
 
-  app.post('/api/sources', (req: Request, res: Response) => {
-    const newSrc = db.addSource(req.body);
+  app.post('/api/sources', requireRole('SUPER_ADMIN', 'EDITOR'), (req: Request, res: Response) => {
+    const sourceUrl = validateOfficialUrl(req.body?.sourceUrl);
+    const officialWebsite = validateOfficialUrl(req.body?.officialWebsite);
+    if (!sourceUrl || !officialWebsite || typeof req.body?.organization !== 'string' || typeof req.body?.category !== 'string') {
+      res.status(400).json({ error: 'A valid approved HTTPS government source URL, website, organization, and category are required.' });
+      return;
+    }
+    const newSrc = db.addSource({ ...req.body, sourceUrl, officialWebsite });
     res.status(201).json(newSrc);
   });
 
-  app.put('/api/sources/:id', (req: Request, res: Response) => {
+  app.put('/api/sources/:id', requireRole('SUPER_ADMIN', 'EDITOR'), (req: Request, res: Response) => {
+    if (req.body?.sourceUrl && !validateOfficialUrl(req.body.sourceUrl)) {
+      res.status(400).json({ error: 'Source URL must be an approved HTTPS government domain.' });
+      return;
+    }
+    if (req.body?.officialWebsite && !validateOfficialUrl(req.body.officialWebsite)) {
+      res.status(400).json({ error: 'Official website must be an approved HTTPS government domain.' });
+      return;
+    }
     const updated = db.updateSource(req.params.id, req.body);
     if (!updated) {
       res.status(404).json({ error: 'Source not found' });
@@ -500,12 +539,12 @@ Sitemap: ${siteUrl}/sitemap.xml
     res.json(updated);
   });
 
-  app.delete('/api/sources/:id', (req: Request, res: Response) => {
+  app.delete('/api/sources/:id', requireRole('SUPER_ADMIN'), (req: Request, res: Response) => {
     const ok = db.deleteSource(req.params.id);
     res.json({ success: ok });
   });
 
-  app.post('/api/sources/:id/scan', async (req: Request, res: Response) => {
+  app.post('/api/sources/:id/scan', requireRole('SUPER_ADMIN', 'EDITOR'), async (req: Request, res: Response) => {
     try {
       const result = await monitoringService.scanSource(req.params.id);
       res.json(result);
@@ -514,7 +553,7 @@ Sitemap: ${siteUrl}/sitemap.xml
     }
   });
 
-  app.post('/api/sources/scan-all', async (req: Request, res: Response) => {
+  app.post('/api/sources/scan-all', requireRole('SUPER_ADMIN', 'EDITOR'), async (req: Request, res: Response) => {
     try {
       const results = await monitoringService.scanAllActiveSources();
       res.json({ success: true, scannedCount: results.length, results });
@@ -524,13 +563,15 @@ Sitemap: ${siteUrl}/sitemap.xml
   });
 
   // Broken Link Checker
-  app.post('/api/links/check', async (req: Request, res: Response) => {
+  app.post('/api/links/check', requireRole('SUPER_ADMIN', 'EDITOR', 'REVIEWER'), async (req: Request, res: Response) => {
     const { urls } = req.body;
     if (!Array.isArray(urls)) {
       res.status(400).json({ error: 'Expected array of URLs' });
       return;
     }
-    const results = await Promise.all(urls.slice(0, 10).map(u => monitoringService.checkLink(u)));
+    const safeUrls = urls.slice(0, 10).map(validateOfficialUrl);
+    if (safeUrls.some(url => !url)) return res.status(400).json({ error: 'Only approved HTTPS government URLs can be checked.' });
+    const results = await Promise.all(safeUrls.map(url => monitoringService.checkLink(url!)));
     res.json(results);
   });
 
@@ -555,7 +596,7 @@ Sitemap: ${siteUrl}/sitemap.xml
     res.status(201).json({ success: true, id: saved.id, message: 'Your message has been received securely.' });
   });
 
-  app.get('/api/contact/messages', (req: Request, res: Response) => {
+  app.get('/api/contact/messages', requireRole('SUPER_ADMIN', 'EDITOR'), (req: Request, res: Response) => {
     res.json(db.getContactMessages());
   });
 
@@ -570,17 +611,17 @@ Sitemap: ${siteUrl}/sitemap.xml
   });
 
   // Site Settings
-  app.get('/api/settings', (req: Request, res: Response) => {
+  app.get('/api/settings', requireRole('SUPER_ADMIN'), (req: Request, res: Response) => {
     res.json(db.getSettings());
   });
 
-  app.put('/api/settings', (req: Request, res: Response) => {
+  app.put('/api/settings', requireRole('SUPER_ADMIN'), (req: Request, res: Response) => {
     const updated = db.updateSettings(req.body);
     res.json(updated);
   });
 
   // Admin Dashboard Statistics
-  app.get('/api/stats', (req: Request, res: Response) => {
+  app.get('/api/stats', requireRole('SUPER_ADMIN', 'EDITOR', 'REVIEWER'), (req: Request, res: Response) => {
     res.json(db.getStats());
   });
 
@@ -589,32 +630,33 @@ Sitemap: ${siteUrl}/sitemap.xml
   // ==========================================
   app.post('/api/auth/login', (req: Request, res: Response) => {
     const { email, password } = req.body;
-    // Default seeded credentials: admin@xsarkarijob.com / admin123
-    if ((email === 'admin@xsarkarijob.com' || email === 'admin') && password === 'admin123') {
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+    if (!adminEmail || !adminPasswordHash) {
+      res.status(503).json({ error: 'Admin authentication is not configured.' });
+      return;
+    }
+    if (email === adminEmail && verifyPassword(password, adminPasswordHash)) {
+      const token = createSession(adminEmail, 'SUPER_ADMIN');
+      setSessionCookie(res, token);
       res.json({
         success: true,
         user: {
           id: 'user-admin-1',
           name: 'Super Administrator',
-          email: 'admin@xsarkarijob.com',
+          email: adminEmail,
           role: 'SUPER_ADMIN'
         },
-        token: 'xsj-session-token-' + Date.now()
-      });
-    } else if (email === 'editor@xsarkarijob.com' && password === 'editor123') {
-      res.json({
-        success: true,
-        user: {
-          id: 'user-editor-1',
-          name: 'Senior Content Editor',
-          email: 'editor@xsarkarijob.com',
-          role: 'EDITOR'
-        },
-        token: 'xsj-session-token-' + Date.now()
+        token: undefined
       });
     } else {
       res.status(401).json({ error: 'Invalid admin email or password' });
     }
+  });
+
+  app.post('/api/auth/logout', (req: Request, res: Response) => {
+    clearSessionCookie(res);
+    res.status(204).end();
   });
 
   // ==========================================

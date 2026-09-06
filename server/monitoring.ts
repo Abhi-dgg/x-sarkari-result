@@ -1,5 +1,6 @@
 import { db } from './db';
 import { geminiService } from './gemini';
+import { validateOfficialUrl } from './security';
 
 export interface SourceScanResult {
   sourceId: string;
@@ -20,10 +21,12 @@ export const monitoringService = {
     if (!source) {
       throw new Error(`Source not found with ID: ${sourceId}`);
     }
+    if (!validateOfficialUrl(source.sourceUrl)) {
+      throw new Error('Source URL must be an approved HTTPS government domain');
+    }
 
     try {
-      // Simulate real HTTP fetch of source header or content
-      // Note: In Node environment, fetch respects standard user-agent
+      // Fetch only a bounded HTML response from an approved official source.
       let rawNoticeText = '';
       try {
         const res = await fetch(source.sourceUrl, {
@@ -34,14 +37,14 @@ export const monitoringService = {
           signal: AbortSignal.timeout(8000)
         });
 
-        if (res.ok) {
-          const html = await res.text();
-          // Extract text snippet
-          rawNoticeText = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 5000);
-        }
+        if (!res.ok) throw new Error(`Official source returned HTTP ${res.status}`);
+        if (!res.headers.get('content-type')?.includes('text/html')) throw new Error('Official source did not return HTML');
+        const html = await res.text();
+        // Extract text snippet
+        rawNoticeText = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 5000);
       } catch (fetchErr) {
-        // Fallback simulation text based on source organization
-        rawNoticeText = `Official Notification from ${source.organization} (${source.category}). Notice regarding recruitment 2026. Application start date: 05 September 2026. Last date to apply: 10 October 2026. Total estimated vacancies: 4,800 posts. Educational qualification: Bachelor degree or 10+2. Age limit: 18-28 years. Fee: Rs 100 for UR/OBC.`;
+        db.updateSource(sourceId, { lastChecked: new Date().toISOString(), status: 'ERROR' });
+        return { sourceId, sourceUrl: source.sourceUrl, scannedAt: new Date().toISOString(), status: 'ERROR', message: 'Official source could not be fetched; no draft was created.' };
       }
 
       // Check for duplicate notice
@@ -83,7 +86,7 @@ export const monitoringService = {
         extractedData: {
           slug: extracted.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 50),
           title: extracted.title,
-          shortDescription: `${extracted.organization} has released official notification for ${extracted.recruitmentName}. Check eligibility, dates, and application process.`,
+          shortDescription: `AI-extracted details from ${source.organization}. A reviewer must verify the official notice before publication.`,
           organization: extracted.organization,
           organizationSlug: source.organization.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
           recruitmentName: extracted.recruitmentName,
@@ -92,25 +95,17 @@ export const monitoringService = {
           state: extracted.state,
           totalVacancy: extracted.totalVacancy,
           educationalQualification: extracted.educationalQualification,
-          ageLimitMin: extracted.ageLimitMin || 18,
-          ageLimitMax: extracted.ageLimitMax || 30,
-          ageLimitAsOn: extracted.ageLimitAsOn || '01/08/2026',
+          ageLimitMin: extracted.ageLimitMin,
+          ageLimitMax: extracted.ageLimitMax,
+          ageLimitAsOn: extracted.ageLimitAsOn,
           salaryPayScale: extracted.salaryPayScale,
           importantDates: extracted.importantDates,
           applicationFees: extracted.applicationFees,
           selectionProcess: extracted.selectionProcess,
           postWiseVacancies: [],
-          requiredDocuments: ['Class 10th Certificate', 'Degree / 12th Marksheet', 'Photo & Signature', 'Photo ID Proof'],
-          howToApply: [
-            `Visit the official website ${source.officialWebsite}`,
-            'Complete registration and fill in all mandatory fields.',
-            'Upload scanned certificates, photo, and signature.',
-            'Pay the prescribed examination fee and submit.'
-          ],
-          importantInstructions: [
-            'Carefully verify eligibility criteria before submitting.',
-            'Keep registration receipt safe for future download of admit card.'
-          ],
+          requiredDocuments: [],
+          howToApply: [],
+          importantInstructions: ['AI-generated draft: verify all fields against the official notice before publication.'],
           importantLinks: [
             { label: 'Apply Online Link', url: extracted.applyUrl || source.officialWebsite, linkType: 'APPLY', isOfficial: true },
             { label: 'Official Notification PDF', url: extracted.officialNotificationUrl || source.sourceUrl, linkType: 'NOTIFICATION', isOfficial: true },
@@ -123,7 +118,7 @@ export const monitoringService = {
         },
         confidenceScore: extracted.confidenceScore,
         suspiciousFields: extracted.suspiciousFields,
-        detectedChanges: ['New recruitment notice scanned from official portal'],
+        detectedChanges: ['Potential update detected; human verification is required before publication.'],
         status: 'NEEDS_REVIEW'
       });
 
@@ -137,7 +132,7 @@ export const monitoringService = {
         sourceUrl: source.sourceUrl,
         scannedAt: new Date().toISOString(),
         status: 'HEALTHY',
-        message: `Successfully extracted structured data with confidence score ${extracted.confidenceScore}%. Draft created for admin review.`,
+        message: `Draft created with an AI confidence score of ${extracted.confidenceScore}%. It is not published or officially verified.`,
         draftCreated: true,
         draftId: draft.id
       };

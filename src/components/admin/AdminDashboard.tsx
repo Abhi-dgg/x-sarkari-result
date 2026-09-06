@@ -46,8 +46,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [activeTab, setActiveTab] = useState<'overview' | 'ai-drafts' | 'jobs' | 'sources' | 'links' | 'messages' | 'settings'>('overview');
   
   // Login State
-  const [email, setEmail] = useState('admin@xsarkarijob.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
 
@@ -201,7 +201,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       const res = await fetch(`/api/ai/drafts/${id}/approve`, { method: 'POST' });
       const data = await res.json();
       if (res.ok) {
-        showToast("✓ AI Draft approved and successfully published to live portal!");
+        showToast("✓ Draft moved to the human verification queue. Publish only after review.");
         loadAllData();
       }
     } catch (e) {
@@ -478,27 +478,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </button>
           </form>
 
-          {/* Quick Credential Pre-fill Assistance for testing */}
+          {/* Credentials are configured securely by the site owner. */}
           <div className="mt-6 pt-4 border-t border-gray-100 text-xs text-gray-500 space-y-2">
-            <p className="font-semibold text-gray-700">Preconfigured Test Credentials:</p>
-            <div className="flex justify-between items-center bg-gray-50 p-2 rounded border border-gray-200">
-              <span>Super Admin: <code className="text-amber-800 font-mono">admin@xsarkarijob.com / admin123</code></span>
-              <button 
-                onClick={() => { setEmail('admin@xsarkarijob.com'); setPassword('admin123'); }} 
-                className="text-[11px] font-bold text-amber-700 hover:underline cursor-pointer"
-              >
-                Use
-              </button>
-            </div>
-            <div className="flex justify-between items-center bg-gray-50 p-2 rounded border border-gray-200">
-              <span>Content Editor: <code className="text-amber-800 font-mono">editor@xsarkarijob.com / editor123</code></span>
-              <button 
-                onClick={() => { setEmail('editor@xsarkarijob.com'); setPassword('editor123'); }} 
-                className="text-[11px] font-bold text-amber-700 hover:underline cursor-pointer"
-              >
-                Use
-              </button>
-            </div>
+            <p className="font-semibold text-gray-700">Administrator access</p>
+            <p>Use the credentials configured by the site owner. Test credentials are not available in production.</p>
           </div>
         </div>
       </div>
@@ -623,7 +606,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   Automated Review Desk: Result Bharat & Sarkari Result
                 </h2>
                 <p className="text-xs text-slate-300 mt-1 max-w-2xl">
-                  Monitoring <strong className="text-white">resultbharat.com</strong> and <strong className="text-white">sarkariresult.com.cm</strong> every 35 seconds. Any updates or changes automatically generate verified drafts with direct notification PDFs for immediate fact-check and 1-click publishing.
+                  Monitoring configured sources for potential updates. AI output is saved as an unverified draft and must be checked against the official notice before publication.
                 </p>
                 <div className="flex items-center gap-4 mt-3 text-xs text-slate-300 flex-wrap">
                   <div className="flex items-center gap-1.5 bg-slate-800/80 px-2.5 py-1 rounded-md border border-slate-700">
@@ -695,7 +678,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     {stats.pendingReview} AI-Extracted Drafts Awaiting Verification
                   </h3>
                   <p className="text-xs text-amber-800 mt-0.5">
-                    Continuous monitoring captured new official recruitment announcements. Review and publish in 1-click.
+                    Potential updates were extracted into drafts. Verify the official notice, dates, links, and eligibility before publishing.
                   </p>
                 </div>
               </div>
@@ -770,11 +753,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                 </span>
                 <span className="text-xs font-black uppercase tracking-wider text-emerald-400">
-                  24/7 Live Monitoring: Result Bharat & Sarkari Result Active
+                  Automated draft monitoring is enabled
                 </span>
               </div>
               <p className="text-xs text-slate-300 mt-1">
-                Continuous background review engine actively watches <strong className="text-white">resultbharat.com</strong> and <strong className="text-white">sarkariresult.com.cm</strong>. When changes occur, structured drafts are ready here with direct official notification PDFs for fast fact-checking and instant 1-click publishing.
+                The monitoring service creates review drafts from configured sources. A draft is not an official verification and cannot be published until a staff member checks its source evidence.
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
@@ -965,8 +948,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         <div className="flex items-start gap-2">
                           <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" />
                           <div>
-                            <span className="font-bold block">Official Verification & PIB Fact-Check:</span>
-                            <span className="text-emerald-900">{draft.factCheckVerdict || 'Sourced directly from official gazette notification and verified.'}</span>
+                            <span className="font-bold block">Fact-check notes:</span>
+                            <span className="text-emerald-900">{draft.factCheckVerdict || 'No official verification statement is available yet.'}</span>
                           </div>
                         </div>
                         {draft.educationalReferences && draft.educationalReferences.length > 0 && (

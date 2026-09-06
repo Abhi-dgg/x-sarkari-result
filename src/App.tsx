@@ -28,6 +28,7 @@ import { Home, Briefcase, Award, CreditCard, Search, CheckCircle2, Zap, Bot } fr
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState('home');
   const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isAIAssistantOpen, setIsAIAssistantOpen] = useState(false);
   
   // Theme State: Light / Dark Mode for Students
@@ -207,6 +208,7 @@ export default function App() {
   };
 
   const handleHeroSearch = (query: string, category?: string, state?: string) => {
+    setSearchQuery([query, category, state].filter(Boolean).join(' '));
     setSearchModalOpen(true);
   };
 
@@ -364,6 +366,7 @@ export default function App() {
               setAdminUser(user);
             }}
             onLogout={() => {
+              fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
               setIsAdminLoggedIn(false);
               setAdminUser(null);
             }}
@@ -376,6 +379,7 @@ export default function App() {
         isOpen={searchModalOpen}
         onClose={() => setSearchModalOpen(false)}
         onNavigate={handleNavigate}
+        initialQuery={searchQuery}
       />
 
       {/* Professional Footer */}
