@@ -1,5 +1,6 @@
 import { db } from './db';
 import { geminiService } from './gemini';
+import { validateOfficialUrl } from './security';
 
 export interface SourceScanResult {
   sourceId: string;
@@ -20,6 +21,9 @@ export const monitoringService = {
     if (!source) {
       throw new Error(`Source not found with ID: ${sourceId}`);
     }
+    if (!validateOfficialUrl(source.sourceUrl)) {
+      throw new Error('Source URL must be an approved HTTPS government domain');
+    }
 
     try {
       // Simulate real HTTP fetch of source header or content
@@ -34,14 +38,13 @@ export const monitoringService = {
           signal: AbortSignal.timeout(8000)
         });
 
-        if (res.ok) {
-          const html = await res.text();
-          // Extract text snippet
-          rawNoticeText = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 5000);
-        }
+        if (!res.ok) throw new Error(`Official source returned HTTP ${res.status}`);
+        const html = await res.text();
+        // Extract text snippet
+        rawNoticeText = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 5000);
       } catch (fetchErr) {
-        // Fallback simulation text based on source organization
-        rawNoticeText = `Official Notification from ${source.organization} (${source.category}). Notice regarding recruitment 2026. Application start date: 05 September 2026. Last date to apply: 10 October 2026. Total estimated vacancies: 4,800 posts. Educational qualification: Bachelor degree or 10+2. Age limit: 18-28 years. Fee: Rs 100 for UR/OBC.`;
+        db.updateSource(sourceId, { lastChecked: new Date().toISOString(), status: 'ERROR' });
+        return { sourceId, sourceUrl: source.sourceUrl, scannedAt: new Date().toISOString(), status: 'ERROR', message: 'Official source could not be fetched; no draft was created.' };
       }
 
       // Check for duplicate notice

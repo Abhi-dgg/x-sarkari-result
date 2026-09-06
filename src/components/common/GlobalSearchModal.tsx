@@ -6,9 +6,10 @@ interface GlobalSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   onNavigate: (route: string) => void;
+  initialQuery?: string;
 }
 
-export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose, onNavigate }) => {
+export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose, onNavigate, initialQuery = '' }) => {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<{
@@ -19,13 +20,14 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, on
 
   useEffect(() => {
     if (!isOpen) return;
+    setQuery(initialQuery);
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, initialQuery]);
 
   useEffect(() => {
     if (!query.trim()) {
