@@ -210,12 +210,6 @@ export const db = {
     answerKeys.splice(index, 1);
     return true;
   },
-  getAnswerKeyBySlug: (slug: string) => answerKeys.find(ak => ak.slug === slug),
-  createAnswerKey: (item: AnswerKeyItem) => {
-    answerKeys.unshift(item);
-    return item;
-  },
-
   // Syllabus
   getSyllabusList: (options?: { category?: string; limit?: number }) => {
     let list = syllabusList.filter(s => s.status === 'PUBLISHED');

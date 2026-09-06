@@ -46,8 +46,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [activeTab, setActiveTab] = useState<'overview' | 'ai-drafts' | 'jobs' | 'sources' | 'links' | 'messages' | 'settings'>('overview');
   
   // Login State
-  const [email, setEmail] = useState('admin@xsarkarijob.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
 
@@ -478,27 +478,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </button>
           </form>
 
-          {/* Quick Credential Pre-fill Assistance for testing */}
+          {/* Credentials are configured securely by the site owner. */}
           <div className="mt-6 pt-4 border-t border-gray-100 text-xs text-gray-500 space-y-2">
-            <p className="font-semibold text-gray-700">Preconfigured Test Credentials:</p>
-            <div className="flex justify-between items-center bg-gray-50 p-2 rounded border border-gray-200">
-              <span>Super Admin: <code className="text-amber-800 font-mono">admin@xsarkarijob.com / admin123</code></span>
-              <button 
-                onClick={() => { setEmail('admin@xsarkarijob.com'); setPassword('admin123'); }} 
-                className="text-[11px] font-bold text-amber-700 hover:underline cursor-pointer"
-              >
-                Use
-              </button>
-            </div>
-            <div className="flex justify-between items-center bg-gray-50 p-2 rounded border border-gray-200">
-              <span>Content Editor: <code className="text-amber-800 font-mono">editor@xsarkarijob.com / editor123</code></span>
-              <button 
-                onClick={() => { setEmail('editor@xsarkarijob.com'); setPassword('editor123'); }} 
-                className="text-[11px] font-bold text-amber-700 hover:underline cursor-pointer"
-              >
-                Use
-              </button>
-            </div>
+            <p className="font-semibold text-gray-700">Administrator access</p>
+            <p>Use the credentials configured by the site owner. Test credentials are not available in production.</p>
           </div>
         </div>
       </div>
